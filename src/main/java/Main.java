@@ -33,21 +33,15 @@ public class Main {
             PreparedStatement pstmst = null;
             pstmst = conn.prepareStatement(readSQL);
             ResultSet rs = null;
-            InputStream is = null;
-            InputStream id = null;
-
             rs = pstmst.executeQuery();
-            if(rs.next()){
-                is = rs.getBinaryStream("rawcode");
-                id = rs.getBinaryStream("id");
-                ByteArrayInputStream msg = (ByteArrayInputStream)rs.getBinaryStream("rawcode");
-                String rawcode = "";
-                byte[] byte_data = new byte[msg.available()];
-                msg.read(byte_data, 0, byte_data.length);
-                rawcode = new String(byte_data);
+
+            while (rs.next()){
+                String rawcode = rs.getString(2);
+                String id = String.valueOf(rs.getInt(1));
+
                 CompilationUnit cu = JdtAstUtil.getCompilationUnit(rawcode);
 
-                String updateSQL = "update reposFile set apiseq='" + "' , set newapiseq = '" + ",where id=" + id;
+                String updateSQL = "update reposFile set apiseq=?, newapiseq=?" + " where id=" + id;
 
                 MyVisitor myVisitor = new MyVisitor(conn, updateSQL);
                 cu.accept(myVisitor);

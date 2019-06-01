@@ -195,11 +195,18 @@ public class MyVisitor extends ASTVisitor{
         String api = APIseq.toString().trim();
         String jdkapi = JDKAPIseq.toString().trim();
 
+        if(api.length() == 0)
+            api = null;
+        if(jdkapi.length() == 0)
+            jdkapi = null;
+
         int key = id.getAndIncrement();
         // 写入数据库
         try {
             stmt = conn.prepareStatement(sql);
             // stmt.setInt(1, key);
+            System.out.println("api :" + api);
+            System.out.println("jdkapi :"  + jdkapi);
             stmt.setString(1, api);
             stmt.setString(2, jdkapi);
             stmt.execute();
